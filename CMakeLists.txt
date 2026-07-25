@@ -14,6 +14,7 @@ else()
     # for noise
     add_compile_options(-Wno-write-strings)
     # workarounds
+    add_compile_options(-fsigned-char)
     add_compile_definitions(__cdecl= __far= __stdcall= cdecl= far=)
 endif()
 

@@ -10,6 +10,10 @@ typedef int socklen_t;
 #include <sys/socket.h>
 #endif
 
+#ifdef __GAMEKID__
+#include <arpa/inet.h>
+#endif
+
 #include "ipx95.h"
 #include "ipx.h"
 

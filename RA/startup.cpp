@@ -280,7 +280,9 @@ int main(int argc, char * argv[])
 	if (path[strlen(path)-1] == '\\') {
 		path[strlen(path)-1] = '\0';
 	}
+#if 0
 	chdir(path);
+#endif
 
 #ifdef WOLAPI_INTEGRATION
 	//	Look for special wolapi install program, used after the patch to version 3, to install "Shared Internet Components".

@@ -161,7 +161,9 @@ void UDPInterfaceClass::Set_Broadcast_Address (void *address)
  *=============================================================================================*/
 bool UDPInterfaceClass::Open_Socket ( SOCKET )
 {
+#ifndef __GAMEKID__
 	linger ling;
+#endif
 	struct 	sockaddr_in addr;
 
 	/*
@@ -233,9 +235,11 @@ bool UDPInterfaceClass::Open_Socket ( SOCKET )
 	/*
 	** Set options for the UDP socket
 	*/
+#ifndef __GAMEKID__
 	ling.l_onoff = 0;		// linger off
 	ling.l_linger = 0;	// timeout in seconds (ie close now)
 	setsockopt (Socket, SOL_SOCKET, SO_LINGER, (char *)&ling, sizeof(ling));
+#endif
 
 	// enable broadcast
 	int yes = 1;

@@ -996,11 +996,14 @@ void TcpipManagerClass::Start_Client(void)
 
 void TcpipManagerClass::Close_Socket(SOCKET s)
 {
+#ifndef __GAMEKID__
 	linger ling;
 
 	ling.l_onoff = 0;		// linger off
 	ling.l_linger = 0;	// timeout in seconds (ie close now)
 	setsockopt(s, SOL_SOCKET, SO_LINGER, (char *)&ling, sizeof(ling));
+#endif
+
 	closesocket (s);
 }
 
