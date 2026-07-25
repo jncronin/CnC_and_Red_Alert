@@ -109,9 +109,9 @@ OptionsClass::OptionsClass(void) :
 	IsScoreShuffle(false),
 	IsPaletteScroll(true),
 
-	KeyForceMove1(KN_LALT),
+	KeyForceMove1(KN_F1),
 	KeyForceMove2(KN_RALT),
-	KeyForceAttack1(KN_LCTRL),
+	KeyForceAttack1(KN_F2),
 	KeyForceAttack2(KN_RCTRL),
 	KeySelect1(KN_LSHIFT),
 	KeySelect2(KN_RSHIFT),
