@@ -248,6 +248,9 @@ void End_Find_File(FindFileState &state)
 
 uint64_t Disk_Space_Available()
 {
+#ifdef __GAMEKID__
+    return 32 * 1024 * 1024;
+#else
     struct statvfs fsbuf;
     char path[1024];
     if(!getcwd(path, 1000))
@@ -257,5 +260,6 @@ uint64_t Disk_Space_Available()
         return 0;
 
     return fsbuf.f_bavail * fsbuf.f_bsize;
+#endif
 }
 #endif
