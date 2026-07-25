@@ -107,6 +107,10 @@ void ScrollClass::AI(KeyNumType &input, int x, int y)
 		*/
 		bool noscroll = false;
 
+#if JOYSCROLL
+		noscroll = true;
+#endif
+
 		if (!noscroll) {
 			bool at_screen_edge = (y <= 0 || x <= 0 || x >= SeenBuff.Get_Width()-1 || y >= SeenBuff.Get_Height()-1);
 
