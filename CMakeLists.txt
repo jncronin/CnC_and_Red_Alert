@@ -20,6 +20,9 @@ endif()
 
 add_compile_definitions(WIN32) # hopefully easier than DOS
 
+if(GAMEKID)
+    add_compile_definitions(JOYSCROLL=1)
+endif()
 
 add_subdirectory(port)
 add_subdirectory(SDLLIB)

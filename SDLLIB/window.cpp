@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include <SDL.h>
+#include <SDL_joystick.h>
 
 #include "ww_win.h"
 #include "net_select.h"
@@ -16,10 +17,35 @@ unsigned int Window;
 
 SDL_Renderer *SDLRenderer;
 Uint32 ForceRenderEventID;
+static SDL_Joystick *sdl_joy;
 
 int Change_Window(int windnum)
 {
     printf("%s\n", __func__);
+    return 0;
+}
+
+static int Joystick_Init()
+{
+#if JOYSCROLL
+    SDL_Init(SDL_INIT_JOYSTICK);
+
+    if(SDL_NumJoysticks() < 1)
+        return -1;
+    
+    sdl_joy = SDL_JoystickOpen(0);
+    return sdl_joy ? 0 : -1;
+#else
+    return 0;
+#endif
+}
+
+int Joystick_Process(int *jx, int *jy)
+{
+    if(!sdl_joy)
+        return -1;
+    *jx = (int)SDL_JoystickGetAxis(sdl_joy, 0);
+    *jy = (int)SDL_JoystickGetAxis(sdl_joy, 1);
     return 0;
 }
 
@@ -40,6 +66,8 @@ void SDL_Create_Main_Window(const char *title, int width, int height)
     // so we get stuck waiting for focus, which it'll never get because it doesn't exist
     SDL_RenderClear(SDLRenderer);
     SDL_RenderPresent(SDLRenderer);
+
+    Joystick_Init();
 }
 
 void SDL_Event_Loop()

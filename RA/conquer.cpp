@@ -83,7 +83,10 @@ class B {
 B<A> test;
 #endif
 
-
+#if JOYSCROLL
+int Joystick_Process(int *jx, int *jy);
+#include <cmath>
+#endif
 
 #include	"function.h"
 #ifdef WIN32
@@ -878,6 +881,9 @@ void Keyboard_Process(KeyNumType & input)
 		Map.Scroll_Map(DIR_S, distance, true);
 		input = KN_NONE;
 	}
+
+	/* SDL joystick to scroll map */
+	
 
 	/*
 	**	Teams are handled by the 10 special team keys. The manual comparison
@@ -2246,6 +2252,54 @@ Mono_Set_Cursor(0,0);
 			if (input) {
 				Keyboard_Process(input);
 			}
+
+#if JOYSCROLL
+			int jx, jy;
+			if(Joystick_Process(&jx, &jy) == 0)
+			{
+				const int joy_div = 32768 / 2 / CELL_LEPTON_W;
+
+				/* Map can only scroll in one direction per frame.
+					Therefore, convert jx,jy into direction:
+						N = 0, E = 255/4, S = 255/2, W = 255 * 3/4
+					and absolute value.  Assume mid scroll i.e.
+						abs value 32768/2 is equivalent to a full
+						scroll in 'normal' mode i.e. edge scrolling */
+				auto abs_sq = (double)jx * (double)jx + (double)jy * (double)jy;
+				if(abs_sq >= (3276.0 * 3276.0))
+				{
+					auto dir = (int)std::rint(std::atan2(jx, -jy) / 2.0 / (double)M_PI * 255.0);
+					while(dir < 0) dir += 256;
+					while(dir > 255) dir -= 256;
+
+					auto amt = (int)std::rint(std::sqrt(abs_sq) / joy_div);
+
+					Map.Scroll_Map((DirType)dir, amt, true);
+				}
+#if 0
+				if(jx < -3276)
+				{
+					int xscr = (-jx) / joy_div;
+					Map.Scroll_Map(DIR_W, xscr, true);
+				}
+				else if(jx > 3276)
+				{
+					int xscr = jx / joy_div;
+					Map.Scroll_Map(DIR_E, xscr, true);
+				}
+				if(jy < -3276)
+				{
+					int yscr = (-jy) / joy_div;
+					Map.Scroll_Map(DIR_N, yscr, true);
+				}
+				else if(jy > 3276)
+				{
+					int yscr = jy / joy_div;
+					Map.Scroll_Map(DIR_S, yscr, true);
+				}
+#endif
+			}
+#endif
 			Map.Render();
 		}
 	}
